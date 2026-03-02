@@ -9,7 +9,12 @@ class SqlDumpSeeder extends Seeder
 {
     public function run(): void
     {
-        $fullPath = base_path('storage/app/data_only.sql');
+        if (DB::table('groups')->exists()) {
+            $this->command?->warn('groups is not empty, skip import');
+            return;
+        }
+
+        $fullPath = database_path('sql/data_only.sql');
 
         if (!file_exists($fullPath)) {
             throw new \RuntimeException("File not found: {$fullPath}");
